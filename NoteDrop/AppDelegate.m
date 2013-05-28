@@ -13,6 +13,10 @@
 
 @implementation AppDelegate
 
++ (AppDelegate *)sharedDelegate {
+	return (AppDelegate *)[UIApplication sharedApplication].delegate;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
@@ -22,8 +26,8 @@
     
     DBAccount *account = [accountManager.linkedAccounts objectAtIndex:0];
     if (account) {
-        DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
-        [DBFilesystem setSharedFilesystem:filesystem];
+        //DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
+        //[DBFilesystem setSharedFilesystem:filesystem];
     }
     
     
@@ -36,12 +40,11 @@
   sourceApplication:(NSString *)source annotation:(id)annotation {
     DBAccount *account = [[DBAccountManager sharedManager] handleOpenURL:url];
     if (account) {
-        DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
-        [DBFilesystem setSharedFilesystem:filesystem];
+        return YES;
     }
-    DBPath *newPath = [[DBPath root] childPath:@"hello.txt"];
-    DBFile *file = [[DBFilesystem sharedFilesystem] createFile:newPath error:nil];
-    [file writeString:@"Hello World!" error:nil];
+//    DBPath *newPath = [[DBPath root] childPath:@"hello.txt"];
+//    DBFile *file = [[DBFilesystem sharedFilesystem] createFile:newPath error:nil];
+//    [file writeString:@"Hello World!" error:nil];
     return NO;
 }
 							

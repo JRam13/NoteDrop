@@ -11,29 +11,21 @@
 
 @interface NotesController ()
 
-@property (nonatomic, retain) DBFilesystem *filesystem;
-@property (nonatomic, retain) DBPath *root;
-@property (nonatomic, retain) NSMutableArray *contents;
+@property (nonatomic) DBFilesystem *filesystem;
+@property (nonatomic) DBPath *root;
+@property (nonatomic) NSMutableArray *contents;
 
 
 @end
 
 @implementation NotesController
 
-- (id)initWithFilesystem:(DBFilesystem *)filesystem root:(DBPath *)root {
-	if ((self = [super init])) {
-		self.filesystem = filesystem;
-        self.root = root;
-		self.navigationItem.title = [root isEqual:[DBPath root]] ? @"Dropbox" : [root name];
-	}
-	return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    [self setFileSystem];
     
+	// Do any additional setup after loading the view.
     //hide back button
     [self.navigationItem setHidesBackButton:YES];
     
@@ -55,30 +47,72 @@
         
     }
     
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
+//		NSArray *immContents = [_filesystem listFolder:_root error:nil];
+//		NSMutableArray *mContents = [NSMutableArray arrayWithArray:immContents];
+//		dispatch_async(dispatch_get_main_queue(), ^() {
+//			self.contents = mContents;
+//		});
+//	});
+//    
+//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:.9f
+//                                             target:self
+//                                           selector:@selector(reload)
+//                                           userInfo:nil
+//                                            repeats:YES];
+    
+    
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
-		NSArray *immContents = [_filesystem listFolder:_root error:nil];
+		NSArray *immContents = [self.filesystem listFolder: [DBPath root] error:nil];
 		NSMutableArray *mContents = [NSMutableArray arrayWithArray:immContents];
+        [mContents sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            return [[obj2 path] compare:[obj1 path]];
+        }];
 		dispatch_async(dispatch_get_main_queue(), ^() {
-			self.contents = mContents;
+            if ( mContents.count > 0 &&
+                [ [self createFileNameFromDate:[NSDate date]] isEqualToString: [[(DBFileInfo*)mContents[0] path ]name] ] ) {
+                
+                DBFileInfo *firstNote = mContents[0];
+                DBFile *file = [self.filesystem openFile:firstNote.path error:nil];
+                if (file) {
+                    [self reload];
+                }
+            }
 		});
 	});
     
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:.9f
-                                             target:self
-                                           selector:@selector(reload)
-                                           userInfo:nil
-                                            repeats:YES];
-    
+}
+
+- (void) setFileSystem
+{
+//    DBAccount *account = [[DBAccountManager sharedManager] linkedAccount];
+//
+//    //set filesystem
+//    DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
+//    [DBFilesystem setSharedFilesystem:filesystem];
+//    
+//    _filesystem = filesystem;
+//    _root = [DBPath root];
+}
+
+-(NSString*)createFileNameFromDate:(NSDate*)date
+{
+    NSDateFormatter *format = [[NSDateFormatter alloc] init];
+    [format setDateFormat:@"dd-MM-yyyy"];
+    NSString *theDate = [format stringFromDate:[NSDate date]];
+    NSString *noteFilename = [NSString stringWithFormat:@"%@.txt", theDate];
+    return noteFilename;
 }
 
 -(void)reload
 {
     NSLog(@"Size: %d", [self.contents count]);
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    
 }
 
 - (void)resignKeyboard

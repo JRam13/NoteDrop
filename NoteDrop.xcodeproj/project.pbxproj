@@ -146,12 +146,12 @@
 		527A0D3A1754F759008023F1 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				527A0D371754F629008023F1 /* ListNotesController.h */,
-				527A0D381754F629008023F1 /* ListNotesController.m */,
-				5247BA531753EABC002A35FA /* NotesController.h */,
-				5247BA541753EABC002A35FA /* NotesController.m */,
 				5247BA3E1753DD6A002A35FA /* LinkHomeController.h */,
 				5247BA3F1753DD6A002A35FA /* LinkHomeController.m */,
+				5247BA531753EABC002A35FA /* NotesController.h */,
+				5247BA541753EABC002A35FA /* NotesController.m */,
+				527A0D371754F629008023F1 /* ListNotesController.h */,
+				527A0D381754F629008023F1 /* ListNotesController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";

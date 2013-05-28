@@ -13,6 +13,6 @@
 
 @property (nonatomic) UIToolbar *keyboardToolbar;
 
-- (id)initWithFilesystem:(DBFilesystem *)filesystem root:(DBPath *)root;
+//- (id)initWithFilesystem:(DBFilesystem *)filesystem root:(DBPath *)root;
 
 @end

@@ -34,15 +34,20 @@
 	if (account) {
         //[account unlink];
         
-        //set filesystem
-        DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
+//        //set filesystem
+//        DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
+//        [DBFilesystem setSharedFilesystem:filesystem];
         
-        NotesController *nc =
-        [[NotesController alloc] initWithFilesystem:filesystem root:[DBPath root]];
+//        DBPath *newPath = [[DBPath root] childPath:@"hello6.txt"];
+//        DBFile *file = [[DBFilesystem sharedFilesystem] createFile:newPath error:nil];
+//        [file writeString:@"Hello World!" error:nil];
+        
+//        NotesController *nc =
+//        [[NotesController alloc] initWithFilesystem:filesystem root:[DBPath root]];
         
         
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
-        nc = [storyboard instantiateViewControllerWithIdentifier:@"nc"];
+        NotesController *nc = [storyboard instantiateViewControllerWithIdentifier:@"nc"];
         [self.navigationController pushViewController:nc animated:YES];
         if ([self.navigationController isNavigationBarHidden])
             [self.navigationController setNavigationBarHidden:NO animated:YES];
