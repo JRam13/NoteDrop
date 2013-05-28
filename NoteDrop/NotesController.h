@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ListNotesController.h"
 
-@interface NotesController : UIViewController <UITextViewDelegate>
+@interface NotesController : UIViewController <UITextViewDelegate, UIImagePickerControllerDelegate>
+@property (weak, nonatomic) IBOutlet UIImageView *photo;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 
 @property (nonatomic) UIToolbar *keyboardToolbar;

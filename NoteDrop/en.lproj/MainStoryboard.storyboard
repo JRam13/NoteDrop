@@ -79,21 +79,29 @@
         <!--Notes Controller - nc-->
         <scene sceneID="wRb-xK-wmN">
             <objects>
-                <viewController restorationIdentifier="nc" storyboardIdentifier="nc" title="nc" id="yx0-zQ-ydH" customClass="NotesController" sceneMemberID="viewController">
+                <viewController restorationIdentifier="nc" storyboardIdentifier="nc" title="nc" hidesBottomBarWhenPushed="YES" id="yx0-zQ-ydH" customClass="NotesController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="v7e-VZ-b5H">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pUY-YI-YI3">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="243" id="2cH-vg-h6I"/>
+                                </constraints>
+                            </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3cd-N2-CuZ">
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="pUY-YI-YI3" firstAttribute="top" secondItem="v7e-VZ-b5H" secondAttribute="top" type="default" id="4Qh-8d-02P"/>
+                            <constraint firstItem="pUY-YI-YI3" firstAttribute="leading" secondItem="v7e-VZ-b5H" secondAttribute="leading" type="default" id="PHf-5m-D8u"/>
                             <constraint firstItem="3cd-N2-CuZ" firstAttribute="leading" secondItem="v7e-VZ-b5H" secondAttribute="leading" type="default" id="czL-vv-rxn"/>
                             <constraint firstItem="3cd-N2-CuZ" firstAttribute="top" secondItem="v7e-VZ-b5H" secondAttribute="top" type="default" id="eso-Bt-0gb"/>
+                            <constraint firstItem="pUY-YI-YI3" firstAttribute="trailing" secondItem="v7e-VZ-b5H" secondAttribute="trailing" type="default" id="u6B-De-XN0"/>
                             <constraint firstItem="3cd-N2-CuZ" firstAttribute="trailing" secondItem="v7e-VZ-b5H" secondAttribute="trailing" type="default" id="w6b-tN-goj"/>
                             <constraint firstItem="3cd-N2-CuZ" firstAttribute="bottom" secondItem="v7e-VZ-b5H" secondAttribute="bottom" type="default" id="yAo-8T-rso"/>
                         </constraints>
@@ -105,7 +113,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="photo" destination="pUY-YI-YI3" id="oFv-qb-NcF"/>
                         <outlet property="textView" destination="3cd-N2-CuZ" id="g5a-pE-JYI"/>
                     </connections>
                 </viewController>
@@ -116,7 +126,7 @@
         <!--List Notes Controller-->
         <scene sceneID="BJg-FI-bLK">
             <objects>
-                <tableViewController id="kex-Zo-5JV" customClass="ListNotesController" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="kex-Zo-5JV" customClass="ListNotesController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="3ck-pK-iCf">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -137,7 +147,14 @@
                             <outlet property="delegate" destination="kex-Zo-5JV" id="kVc-J3-Xrh"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="yvF-BC-dOw"/>
+                    <navigationItem key="navigationItem" id="yvF-BC-dOw">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="gxQ-Zz-Mnn">
+                            <connections>
+                                <action selector="addNote:" destination="kex-Zo-5JV" id="yHB-nz-YvE"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <nil key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5ZK-mX-97x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -156,6 +173,9 @@
         </class>
         <class className="ListNotesController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ListNotesController.h"/>
+            <relationships>
+                <relationship kind="action" name="addNote:" candidateClass="UIBarButtonItem"/>
+            </relationships>
         </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
@@ -163,6 +183,7 @@
         <class className="NotesController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotesController.h"/>
             <relationships>
+                <relationship kind="outlet" name="photo" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="textView" candidateClass="UITextView"/>
             </relationships>
         </class>

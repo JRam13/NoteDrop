@@ -26,6 +26,9 @@
 		5247BA511753E721002A35FA /* link.png in Resources */ = {isa = PBXBuildFile; fileRef = 5247BA501753E721002A35FA /* link.png */; };
 		5247BA551753EABD002A35FA /* NotesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5247BA541753EABC002A35FA /* NotesController.m */; };
 		527A0D391754F629008023F1 /* ListNotesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527A0D381754F629008023F1 /* ListNotesController.m */; };
+		52D2483F1755492100FCCDEE /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D2483E1755492100FCCDEE /* UIImage+Resize.m */; };
+		52D248441755494500FCCDEE /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D248411755494500FCCDEE /* UIImage+Alpha.m */; };
+		52D248451755494500FCCDEE /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D248431755494500FCCDEE /* UIImage+RoundedCorner.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +58,12 @@
 		5247BA541753EABC002A35FA /* NotesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotesController.m; sourceTree = "<group>"; };
 		527A0D371754F629008023F1 /* ListNotesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListNotesController.h; sourceTree = "<group>"; };
 		527A0D381754F629008023F1 /* ListNotesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListNotesController.m; sourceTree = "<group>"; };
+		52D2483D1755492100FCCDEE /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
+		52D2483E1755492100FCCDEE /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
+		52D248401755494400FCCDEE /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
+		52D248411755494500FCCDEE /* UIImage+Alpha.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Alpha.m"; sourceTree = "<group>"; };
+		52D248421755494500FCCDEE /* UIImage+RoundedCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCorner.h"; sourceTree = "<group>"; };
+		52D248431755494500FCCDEE /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,7 +131,13 @@
 		5247BA2A1753DD6A002A35FA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				52D2483D1755492100FCCDEE /* UIImage+Resize.h */,
+				52D2483E1755492100FCCDEE /* UIImage+Resize.m */,
 				5247BA321753DD6A002A35FA /* AppDelegate.h */,
+				52D248401755494400FCCDEE /* UIImage+Alpha.h */,
+				52D248411755494500FCCDEE /* UIImage+Alpha.m */,
+				52D248421755494500FCCDEE /* UIImage+RoundedCorner.h */,
+				52D248431755494500FCCDEE /* UIImage+RoundedCorner.m */,
 				5247BA331753DD6A002A35FA /* AppDelegate.m */,
 				5247BA2B1753DD6A002A35FA /* NoteDrop-Info.plist */,
 				5247BA2C1753DD6A002A35FA /* InfoPlist.strings */,
@@ -236,6 +251,9 @@
 				5247BA401753DD6A002A35FA /* LinkHomeController.m in Sources */,
 				5247BA551753EABD002A35FA /* NotesController.m in Sources */,
 				527A0D391754F629008023F1 /* ListNotesController.m in Sources */,
+				52D2483F1755492100FCCDEE /* UIImage+Resize.m in Sources */,
+				52D248441755494500FCCDEE /* UIImage+Alpha.m in Sources */,
+				52D248451755494500FCCDEE /* UIImage+RoundedCorner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

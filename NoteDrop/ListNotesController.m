@@ -7,10 +7,10 @@
 //
 
 #import "ListNotesController.h"
+#import "NotesController.h"
 
 @interface ListNotesController ()
 
-@property (nonatomic) DBFilesystem *filesystem;
 @property (nonatomic, retain) DBPath *root;
 @property (nonatomic, assign) BOOL loadingFiles;
 @property (nonatomic, retain) NSMutableArray *contents;
@@ -105,14 +105,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
     return [self.contents count];
 }
@@ -173,6 +171,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+
+    DBFileInfo *info = [_contents objectAtIndex:[indexPath row]];
+    NSLog(@"Info: %@" , info);
+    
+    DBError *error = [[DBError alloc] init];
+    _file = [_filesystem openFile:info.path error:&error];
+    _noteName = info.path.name;
+    
+    [self.navigationController popViewControllerAnimated:YES];
+
+    
     // Navigation logic may go here. Create and push another view controller.
     /*
      <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
@@ -187,4 +196,18 @@
     [self.tableView reloadData];
 }
 
+- (IBAction)addNote:(UIBarButtonItem *)sender {
+    _file = NULL;
+    _content = @"";
+    _noteName = [self todaysFormattedDate];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(NSString*)todaysFormattedDate
+{
+    NSDateFormatter *format = [[NSDateFormatter alloc] init];
+    [format setDateFormat:@"MM-dd-yyyy-HH:mm:ss"];
+    NSString *theDate = [format stringFromDate:[NSDate date]];
+    return [NSString stringWithFormat:@"%@.txt", theDate];
+}
 @end

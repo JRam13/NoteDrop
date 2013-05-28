@@ -8,13 +8,22 @@
 
 #import "NotesController.h"
 #import <dropbox/dropbox.h>
+#import "ListNotesController.h"
+#import "UIImage+Resize.h"
+#import <QuartzCore/QuartzCore.h>
 
-@interface NotesController ()
+@interface NotesController (){
+    ListNotesController *lnc;
+}
 
 @property (nonatomic) DBFilesystem *filesystem;
 @property (nonatomic) DBPath *root;
 @property (nonatomic) NSMutableArray *contents;
+@property (nonatomic) NSString *editContent;
+@property (nonatomic) NSString *noteName;
+@property (nonatomic) DBFile *file;
 
+ 
 
 @end
 
@@ -25,6 +34,8 @@
     [super viewDidLoad];
     [self setFileSystem];
     
+    lnc = [[ListNotesController alloc] init];
+    
 	// Do any additional setup after loading the view.
     //hide back button
     [self.navigationItem setHidesBackButton:YES];
@@ -34,59 +45,54 @@
     if(_keyboardToolbar == nil){
         _keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,0, self.view.bounds.size.width, 44)];
         
-        UIBarButtonItem *camera = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCamera target:self action:@selector(resignKeyboard)];
+        UIBarButtonItem *camera = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCamera target:self action:@selector(choosePhoto)];
         
 
         UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
         
-        UIBarButtonItem *done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(resignKeyboard)];
+        UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(resignKeyboardCancel)];
+
+        UIBarButtonItem *done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(resignKeyboardSave)];
         
-        [_keyboardToolbar setItems:[[NSArray alloc] initWithObjects:camera, space, done, nil] animated:YES];
+        [_keyboardToolbar setItems:[[NSArray alloc] initWithObjects:camera, space, cancel, done, nil] animated:YES];
         
         _textView.inputAccessoryView = _keyboardToolbar;
         
     }
-    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
-//		NSArray *immContents = [_filesystem listFolder:_root error:nil];
-//		NSMutableArray *mContents = [NSMutableArray arrayWithArray:immContents];
-//		dispatch_async(dispatch_get_main_queue(), ^() {
-//			self.contents = mContents;
-//		});
-//	});
-//    
-//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:.9f
-//                                             target:self
-//                                           selector:@selector(reload)
-//                                           userInfo:nil
-//                                            repeats:YES];
-    
     
     
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    _editContent = lnc.content;
+    if(lnc.noteName){
+        _noteName = lnc.noteName;
+    }
+    _file = lnc.file;
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
-		NSArray *immContents = [self.filesystem listFolder: [DBPath root] error:nil];
-		NSMutableArray *mContents = [NSMutableArray arrayWithArray:immContents];
-        [mContents sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [[obj2 path] compare:[obj1 path]];
-        }];
-		dispatch_async(dispatch_get_main_queue(), ^() {
-            if ( mContents.count > 0 &&
-                [ [self createFileNameFromDate:[NSDate date]] isEqualToString: [[(DBFileInfo*)mContents[0] path ]name] ] ) {
-                
-                DBFileInfo *firstNote = mContents[0];
-                DBFile *file = [self.filesystem openFile:firstNote.path error:nil];
-                if (file) {
-                    [self reload];
-                }
-            }
-		});
-	});
     
+    if(_file){
+        self.title = _noteName;
+        self.photo.image = [UIImage imageWithData:[_file readData:nil]];
+        _textView.text = [_file readString:nil];
+    }
+    else if(_noteName){
+        self.title = _noteName;
+        _textView.text = _editContent;
+        [self addFileToAccount];
+    }
+}
+
+- (void)addFileToAccount
+{
+    
+    
+    DBPath *newPath = [[DBPath root] childPath:_noteName];
+    
+    DBFile *file = [lnc.filesystem createFile:newPath error:nil];
+    [file writeString:@"" error:nil];
+
 }
 
 - (void) setFileSystem
@@ -101,13 +107,12 @@
 //    _root = [DBPath root];
 }
 
--(NSString*)createFileNameFromDate:(NSDate*)date
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSDateFormatter *format = [[NSDateFormatter alloc] init];
-    [format setDateFormat:@"dd-MM-yyyy"];
-    NSString *theDate = [format stringFromDate:[NSDate date]];
-    NSString *noteFilename = [NSString stringWithFormat:@"%@.txt", theDate];
-    return noteFilename;
+    NSLog(@"segue");
+    
+    lnc = segue.destinationViewController;
+    
 }
 
 -(void)reload
@@ -115,9 +120,60 @@
     NSLog(@"Size: %d", [self.contents count]);
 }
 
-- (void)resignKeyboard
+- (void)resignKeyboardSave
+{
+    
+    [_textView resignFirstResponder];
+    
+    if(!_noteName && !_contents){
+        NSLog(@"Creating new note");
+        DBPath *newPath = [[DBPath root] childPath:[self setDate]];
+        DBFile *file = [lnc.filesystem createFile:newPath error:nil];
+        [file writeString:_textView.text error:nil];
+    }
+    
+    else if( self.photo.image ){
+        
+        DBPath *newPath = [[DBPath root] childPath:_noteName];
+        NSLog(@"path: %@" , newPath.name);
+        UIImage *composite = [self imageByCombiningImageViewWithTextView];
+        NSData *imageData = UIImagePNGRepresentation(composite);
+        if(!_file){
+            DBPath *newPath = [[DBPath root] childPath:_noteName];
+            DBFile *file = [lnc.filesystem openFile:newPath error:nil];
+            [file writeData:imageData error:nil];
+        }else{
+            [_file writeData:imageData error:nil];
+        }
+        
+    }
+    else{
+        
+        DBPath *newPath = [[DBPath root] childPath:_noteName];
+        NSLog(@"path: %@" , newPath.name);
+        if(!_file){
+            NSLog(@"Editing file");
+            DBFile *file = [lnc.filesystem openFile:newPath error:nil];
+            [file writeString:_textView.text error:nil];
+        }else{
+            [_file writeString:_textView.text error:nil];
+        }
+    }
+    
+}
+
+- (void)resignKeyboardCancel
 {
     [_textView resignFirstResponder];
+    
+}
+
+-(NSString*)setDate
+{
+    NSDateFormatter *format = [[NSDateFormatter alloc] init];
+    [format setDateFormat:@"MM-dd-yyyy-HH:mm:ss"];
+    NSString *theDate = [format stringFromDate:[NSDate date]];
+    return [NSString stringWithFormat:@"%@.txt", theDate];
 }
 
 - (void)didReceiveMemoryWarning
@@ -125,5 +181,62 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+-(void)choosePhoto
+{
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+#if TARGET_IPHONE_SIMULATOR
+    imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+#else
+    imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+#endif
+    imagePickerController.editing = YES;
+    imagePickerController.delegate = (id)self;
+    
+    [self presentViewController:imagePickerController animated:YES completion:nil];
+}
+
+#pragma mark - UIImagePickerController delegate
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+	UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    // Resize the image from the camera
+	UIImage *scaledImage = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(self.photo.frame.size.width, self.photo.frame.size.height) interpolationQuality:kCGInterpolationHigh];
+    // Crop the image to a square
+    UIImage *croppedImage = [scaledImage croppedImage:CGRectMake((scaledImage.size.width - self.photo.frame.size.width)/2, (scaledImage.size.height - self.photo.frame.size.height)/2, self.photo.frame.size.width, self.photo.frame.size.height)];
+    // Show the photo on the screen
+    self.photo.image = croppedImage;
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (UIImage*)imageByCombiningImageViewWithTextView
+{
+    
+    UIGraphicsBeginImageContextWithOptions(self.photo.image.size, NO, 0.0); //retina res
+    [self.photo.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:self.textView.text];
+    NSInteger _stringLength = self.textView.text.length;
+    [str addAttribute:NSBackgroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, _stringLength)];
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0] range:NSMakeRange(0, _stringLength)];
+    
+    self.textView.attributedText = str;
+    [self.textView setNeedsDisplay];
+    
+    [self.textView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
 
 @end
