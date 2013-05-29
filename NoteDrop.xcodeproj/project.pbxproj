@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		524239C817568C0800219218 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 524239C717568C0700219218 /* AssetsLibrary.framework */; };
 		5247BA241753DD6A002A35FA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5247BA231753DD6A002A35FA /* UIKit.framework */; };
 		5247BA261753DD6A002A35FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5247BA251753DD6A002A35FA /* Foundation.framework */; };
 		5247BA281753DD6A002A35FA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5247BA271753DD6A002A35FA /* CoreGraphics.framework */; };
@@ -29,9 +30,12 @@
 		52D2483F1755492100FCCDEE /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D2483E1755492100FCCDEE /* UIImage+Resize.m */; };
 		52D248441755494500FCCDEE /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D248411755494500FCCDEE /* UIImage+Alpha.m */; };
 		52D248451755494500FCCDEE /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D248431755494500FCCDEE /* UIImage+RoundedCorner.m */; };
+		52D248481756653B00FCCDEE /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D248461756653B00FCCDEE /* EventKit.framework */; };
+		52D248491756653B00FCCDEE /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D248471756653B00FCCDEE /* EventKitUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		524239C717568C0700219218 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		5247BA201753DD6A002A35FA /* NoteDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoteDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5247BA231753DD6A002A35FA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5247BA251753DD6A002A35FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -64,6 +68,8 @@
 		52D248411755494500FCCDEE /* UIImage+Alpha.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Alpha.m"; sourceTree = "<group>"; };
 		52D248421755494500FCCDEE /* UIImage+RoundedCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCorner.h"; sourceTree = "<group>"; };
 		52D248431755494500FCCDEE /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
+		52D248461756653B00FCCDEE /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
+		52D248471756653B00FCCDEE /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +77,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				524239C817568C0800219218 /* AssetsLibrary.framework in Frameworks */,
+				52D248481756653B00FCCDEE /* EventKit.framework in Frameworks */,
+				52D248491756653B00FCCDEE /* EventKitUI.framework in Frameworks */,
 				5247BA4F1753DDA5002A35FA /* QuartzCore.framework in Frameworks */,
 				5247BA4D1753DD9B002A35FA /* SystemConfiguration.framework in Frameworks */,
 				5247BA4B1753DD93002A35FA /* Security.framework in Frameworks */,
@@ -105,6 +114,9 @@
 		5247BA221753DD6A002A35FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				524239C717568C0700219218 /* AssetsLibrary.framework */,
+				52D248461756653B00FCCDEE /* EventKit.framework */,
+				52D248471756653B00FCCDEE /* EventKitUI.framework */,
 				5247BA4E1753DDA5002A35FA /* QuartzCore.framework */,
 				5247BA4C1753DD9B002A35FA /* SystemConfiguration.framework */,
 				5247BA4A1753DD93002A35FA /* Security.framework */,

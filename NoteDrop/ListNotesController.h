@@ -13,6 +13,7 @@
 
 @property (nonatomic) NSString *content;
 @property (nonatomic) NSString *noteName;
+@property (nonatomic) bool clearPhoto;
 @property (nonatomic) DBFilesystem *filesystem;
 @property (nonatomic) DBFile *file;
 

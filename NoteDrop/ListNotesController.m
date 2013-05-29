@@ -200,6 +200,7 @@
     _file = NULL;
     _content = @"";
     _noteName = [self todaysFormattedDate];
+    _clearPhoto = YES;
     [self.navigationController popViewControllerAnimated:YES];
 }
 

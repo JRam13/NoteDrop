@@ -11,6 +11,8 @@
 #import "ListNotesController.h"
 #import "UIImage+Resize.h"
 #import <QuartzCore/QuartzCore.h>
+#import <EventKit/EventKit.h>
+#import "AppDelegate.h"
 
 @interface NotesController (){
     ListNotesController *lnc;
@@ -71,6 +73,11 @@
     }
     _file = lnc.file;
     
+    if(lnc.clearPhoto){
+        self.photo.image = nil;
+        lnc.clearPhoto = NO;
+
+    }
     
     if(_file){
         self.title = _noteName;
@@ -160,6 +167,42 @@
         }
     }
     
+    //create event if necessary
+    if(self.textView.text.length > 6){
+        [self addEvent];
+    }
+        
+    
+}
+
+- (void) addEvent
+{
+    //trim whitespace at beginning
+    NSString *noWhiteSpace = [self.textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    //isolate "TODO" portion
+    NSString *trimmedText = [noWhiteSpace substringToIndex:5];
+    if( [trimmedText caseInsensitiveCompare:@"TODO:"] == NSOrderedSame ){
+
+        //get and trim reminder text
+        NSString *reminderText = [[noWhiteSpace substringFromIndex:5] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        NSLog(@"ReminderText: %@", reminderText);
+
+        
+        EKEventStore *eventStore = [[EKEventStore alloc] init];
+        
+        EKEvent *event  = [EKEvent eventWithEventStore:eventStore];
+        event.title     = reminderText;
+        
+        event.startDate = [[NSDate alloc] init];
+        event.endDate   = [[NSDate alloc] initWithTimeInterval:600 sinceDate:event.startDate];
+        
+        [event setCalendar:[eventStore defaultCalendarForNewEvents]];
+        NSError *err;
+        [eventStore saveEvent:event span:EKSpanThisEvent error:&err];
+        
+        NSLog(@"Reminder Added: %@" , reminderText);
+    }
 }
 
 - (void)resignKeyboardCancel
@@ -182,6 +225,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+/**************************************************
+The following code is inspired by Binkowski & Alex Silva
+ ***************************************************/
+
 -(void)choosePhoto
 {
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
@@ -195,6 +243,7 @@
     
     [self presentViewController:imagePickerController animated:YES completion:nil];
 }
+
 
 #pragma mark - UIImagePickerController delegate
 
@@ -216,6 +265,7 @@
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
+
 - (UIImage*)imageByCombiningImageViewWithTextView
 {
     
@@ -235,8 +285,15 @@
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
+    //add metadata
+    NSMutableDictionary *tiffMetadata = [[NSMutableDictionary alloc] init];
+    [tiffMetadata setObject:@"This is metadata!" forKey:_noteName];
+    NSMutableDictionary *metadata = [[NSMutableDictionary alloc] init];
+    [metadata setObject:tiffMetadata forKey:_noteName];
+    
+    NSLog(@"Metadata added for: %@", _noteName);
+    
     return image;
 }
-
 
 @end
